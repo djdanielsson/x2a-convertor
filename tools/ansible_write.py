@@ -734,6 +734,23 @@ class AnsibleWriteTool(X2ATool):
 
         return None
 
+    @staticmethod
+    def _insert_blank_lines_between_tasks(yaml_text: str) -> str:
+        """Insert blank lines between top-level list items in a task file.
+
+        yaml.dump strips all blank lines. For readability, Ansible tasks
+        should have a blank line between each task entry (``- name: ...``).
+        This only applies to files whose top-level structure is a list
+        (task files, handler files).
+        """
+        lines = yaml_text.split("\n")
+        result: list[str] = []
+        for i, line in enumerate(lines):
+            if i > 0 and line.startswith("- ") and result and result[-1] != "":
+                result.append("")
+            result.append(line)
+        return "\n".join(result)
+
     def _format_and_write_yaml(
         self, parsed_yaml: Any, file_path: str, yaml_content: str
     ) -> str:
@@ -752,6 +769,12 @@ class AnsibleWriteTool(X2ATool):
                     sort_keys=False,
                     width=160,
                 )
+                if isinstance(parsed_yaml, list):
+                    formatted_yaml = self._insert_blank_lines_between_tasks(
+                        formatted_yaml
+                    )
+                if not formatted_yaml.startswith("---"):
+                    formatted_yaml = "---\n" + formatted_yaml
                 self._write_tool.invoke(
                     {"file_path": file_path, "text": formatted_yaml}
                 )

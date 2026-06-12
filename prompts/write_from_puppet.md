@@ -2,6 +2,12 @@
 
 These rules apply ONLY when migrating a Puppet module to Ansible.
 
+### TASK FILE FORMATTING — CRITICAL:
+- Every task file MUST have a blank line between each task (`- name:` block)
+- Every YAML file MUST start with `---`
+- Use imperative mood for task names: "Install nginx", not "nginx installation"
+- Prefix tasks in sub-task files with the filename: `install | Install required packages`
+
 ### EPP TEMPLATE CONVERSION (.epp → .j2):
 Puppet EPP templates use different syntax from Chef ERB. Convert as follows:{% raw %}
    - `<%= $variable %>` → `{{ variable }}` (remove $ prefix)

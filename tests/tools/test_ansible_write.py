@@ -238,9 +238,7 @@ app_log_level: "{{ log_level | default('INFO') | upper }}"
 
         with Path(file_path).open() as f:
             content = f.read()
-            # AnsibleDumper strips the --- separator
-            assert not content.startswith("---")
-            # But the content structure should be preserved
+            assert content.startswith("---")
             assert "name: Install nginx" in content
             assert "ansible.builtin.package:" in content
             assert "name: nginx" in content

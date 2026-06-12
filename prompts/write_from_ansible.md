@@ -1,7 +1,12 @@
-
 ## Ansible-to-Ansible Modernization Rules
 
 These rules apply ONLY when modernizing a legacy Ansible role into a modern one.
+
+### TASK FILE FORMATTING — CRITICAL:
+- Every task file MUST have a blank line between each task (`- name:` block)
+- Every YAML file MUST start with `---`
+- Use imperative mood for task names: "Install nginx", not "nginx installation"
+- Prefix tasks in sub-task files with the filename: `install | Install required packages`
 
 ### VALUE-TYPE PRESERVATION — CRITICAL:
 Distinguish between two categories of values:
